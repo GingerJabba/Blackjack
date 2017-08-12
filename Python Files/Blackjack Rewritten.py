@@ -36,7 +36,7 @@ class Blackjack(object):
         self.dlabel = [None]*5
         self.dimages = [None]*5
         self.dfilename = [None]*5
-        os.chdir('/Users/Chris/Documents/OneDrive/Chris/A-Level/Computer Science/Programs/untitled3/Blackajck/Graphics/cards/')
+        os.chdir('/Users/Chris/Documents/OneDrive/Chris/A-Level/Computer Science/Programs/untitled3/Blackajck/Assets/cards/')
         self.win_image = None
         self.hidden_card = None
         self.top.bind('<Return>', self.hit)
