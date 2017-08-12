@@ -5,7 +5,7 @@ PROJECT NAME = Blackjack
 from tkinter import *
 from random import *
 from tkinter import messagebox
-
+import os
 class Blackjack(object):
     def __init__(self):
         self.deckImage = []
@@ -36,8 +36,7 @@ class Blackjack(object):
         self.dlabel = [None]*5
         self.dimages = [None]*5
         self.dfilename = [None]*5
-        self.win_name = None
-        self.win_file = None
+        os.chdir('/Users/Chris/Documents/OneDrive/Chris/A-Level/Computer Science/Programs/untitled3/Blackajck/Graphics/cards/')
         self.win_image = None
         self.hidden_card = None
         self.top.bind('<Return>', self.hit)
@@ -155,7 +154,7 @@ class Blackjack(object):
     def addDealerImage(self):
         x_coor = self.dcards * 50
         if self.dcards == 1:
-            self.dimages[self.dcards] = 'Win.png'
+            self.dimages[self.dcards] = 'back.png'
         else:
             self.dimages[self.dcards] = self.zipDeck[0][0]
         self.dfilename[self.dcards] = PhotoImage(file=self.dimages[self.dcards])
