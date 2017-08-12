@@ -170,7 +170,7 @@ class Blackjack(object):
     def endScreen(self):
         if self.win:
             print("win")
-            self.win_file = PhotoImage(file = 'Win.png')
+            self.win_file = PhotoImage(file = 'win.png')
             self.win_image = Label(self.top, image = self.win_file)
             self.win_image.place(x = 0, y = 0)
 
