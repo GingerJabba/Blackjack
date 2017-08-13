@@ -6,11 +6,23 @@ from tkinter import *
 from random import *
 from tkinter import messagebox
 import os
+from time import sleep
+from threading import Thread
+
 class Blackjack(object):
     def __init__(self):
+        self.top = Tk()
+        self.top.title("Blackjack")
+        self.width = 300
+        self.height = 500
+        self.top.minsize(self.width,self.height)
+        self.top.geometry('250x150+0+0')
+        self.top.geometry('0x0')
         self.deckImage = []
+        self.startButton = Button(self.top, text="Play", command=self.dealHand)
+        self.startButton.grid(column=0, row=0)
         for i in range(1, 53):
-            self.deckImage.append(str(i)+".png")
+            self.deckImage.append(str(i) + ".png")
         hearts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
         spades = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
         diamonds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
@@ -23,23 +35,27 @@ class Blackjack(object):
         self.playing = True
         self.player_total = 0
         self.dealer_total = 0
-        self.top = Tk()
-        self.top.title("Blackjack")
-        self.C = Canvas(self.top, background="blue", height=2500, width=2500)
-        self.startButton = Button(self.top, text="Play", command=self.dealHand)
-        self.startButton.grid(column=1, row=0)
         self.cards = 0
         self.dcards = 0
-        self.label = [None]*5
-        self.images = [None]*5
-        self.filename = [None]*5
-        self.dlabel = [None]*5
-        self.dimages = [None]*5
-        self.dfilename = [None]*5
+        self.label = [None] * 5
+        self.images = [None] * 5
+        self.filename = [None] * 5
+        self.dlabel = [None] * 5
+        self.dimages = [None] * 5
+        self.dfilename = [None] * 5
         os.chdir('/Users/Chris/Documents/OneDrive/Chris/A-Level/Computer Science/Programs/untitled3/Blackajck/Assets/cards/')
-        self.win_image = None
+        self.winner_file = PhotoImage(file='win.gif')
+        self.loser_file = PhotoImage(file = 'lose.gif')
+        self.loser_image = None
+        self.winner_image = None
         self.hidden_card = None
+        self.gameOn = True
         self.top.bind('<Return>', self.hit)
+
+    def startup(self):
+        self.resetButton.grid_forget()
+        self.top.destroy()
+        self.__init__()
 
     def dealHand(self):
         while True:
@@ -97,32 +113,34 @@ class Blackjack(object):
 
     def dealerHandAdd(self):
         self.dealer_hand.append(self.zipDeck[0][1])
+
         self.addDealerImage()
         del self.zipDeck[0]
 
     def totalCheck(self):
         self.handTotal()
         self.compHandTotal()
-        self.win =None
-        print(self.dealer_total)
+        self.win = None
         if self.dealer_total > 21:
             self.win = True
+            self.gameOn = False
         if self.player_total == 21:
             self.win = True
+            self.gameOn = False
         elif self.dealer_total == 21:
             self.win = False
+            self.gameOn = False
         elif self.player_total > self.dealer_total and (self.player_total < 21 and self.dealer_total < 21):
             self.win = True
+            self.gameOn = False
         elif self.player_total < self.dealer_total and self.dealer_total > 21:
             self.win = True
+            self.gameOn = False
         elif self.player_total == self.dealer_total:
             self.win = True
+            self.gameOn = False
         else:
             self.win = False
-        if self.win:
-            print("win")
-        else:
-            print("loser")
         self.endScreen()
 
     def dealerDraw(self):
@@ -134,7 +152,7 @@ class Blackjack(object):
         while self.dealer_total < 17:
             self.dealerHandAdd()
             self.compHandTotal()
-        self.totalCheck()
+        self.top.after(1000, self.totalCheck)
 
     def hit(self, *events):
         if self.playing:
@@ -169,10 +187,16 @@ class Blackjack(object):
 
     def endScreen(self):
         if self.win:
-            print("win")
-            self.win_file = PhotoImage(file = 'win.png')
-            self.win_image = Label(self.top, image = self.win_file)
-            self.win_image.place(x = 0, y = 0)
+            self.winner_image = Label(self.top, image = self.winner_file)
+            self.winner_image.place(x = 0, y = 0)
+        else:
+            self.loser_image = Label(self.top, image = self.loser_file)
+            self.loser_image.place(x=0,y=0)
+        self.resetButton = Button(self.top, text = 'Restart', command = self.startup)
+        self.resetButton.grid(column = 0, row = 100)
+
+
+
 
 
 B = Blackjack()
