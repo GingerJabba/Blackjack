@@ -6,21 +6,20 @@ from tkinter import *
 from random import *
 from tkinter import messagebox
 import os
-from time import sleep
-from threading import Thread
+
 
 class Blackjack(object):
+
     def __init__(self):
+        #GUI initilisation
         self.top = Tk()
         self.top.title("Blackjack")
-        self.width = 300
-        self.height = 500
-        self.top.minsize(self.width,self.height)
+        self.top.minsize(300,500)
         self.top.geometry('250x150+0+0')
-        self.top.geometry('0x0')
         self.deckImage = []
         self.startButton = Button(self.top, text="Play", command=self.dealHand)
         self.startButton.grid(column=0, row=0)
+        #Deck Variables
         for i in range(1, 53):
             self.deckImage.append(str(i) + ".png")
         hearts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
@@ -30,11 +29,14 @@ class Blackjack(object):
         deck = hearts + spades + diamonds + clubs
         self.zipDeck = list(zip(self.deckImage, deck))
         shuffle(self.zipDeck)
+        #Player variables
         self.dealer_hand = []
         self.player_hand = []
         self.playing = True
         self.player_total = 0
         self.dealer_total = 0
+        #Dealing variables
+        os.chdir('/Users/Chris/Documents/OneDrive/Chris/A-Level/Computer Science/Programs/untitled3/Blackajck/Assets/cards/')
         self.cards = 0
         self.dcards = 0
         self.label = [None] * 5
@@ -43,13 +45,13 @@ class Blackjack(object):
         self.dlabel = [None] * 5
         self.dimages = [None] * 5
         self.dfilename = [None] * 5
-        os.chdir('/Users/Chris/Documents/OneDrive/Chris/A-Level/Computer Science/Programs/untitled3/Blackajck/Assets/cards/')
+        self.loser_image = None
+        #End screen variables
         self.winner_file = PhotoImage(file='win.gif')
         self.loser_file = PhotoImage(file = 'lose.gif')
-        self.loser_image = None
         self.winner_image = None
         self.hidden_card = None
-        self.gameOn = True
+        #Key bindings
         self.top.bind('<Return>', self.hit)
 
     def startup(self):
@@ -84,7 +86,7 @@ class Blackjack(object):
                 if ace == "no":
                     i = 11
             self.player_total += i
-        if self.player_total > 21 and self.playing == True:
+        if self.player_total > 21 and self.playing:
             self.dealerDraw()
 
     def compHandTotal(self):
@@ -94,13 +96,13 @@ class Blackjack(object):
             if i == 1:
                 total1 = self.dealer_total + 1
                 total11 = self.dealer_total + 11
-                if total1 < 21 and total11 > 21:
+                if total1 < 21 < total11:
                     i = 1
-                elif total11 > self.player_total and total11 < 21:
+                elif self.player_total < total11 < 21:
                     i = 11
                 elif total11 == 21:
                     i = 11
-                elif total11 <17 and (total11 != 21 or (total11 > self.player_total and total11 < 21)):
+                elif total11 < 17 and (total11 != 21 or (self.player_total < total11 < 21)):
                     i = 1
                 else:
                     i = 1
@@ -113,7 +115,6 @@ class Blackjack(object):
 
     def dealerHandAdd(self):
         self.dealer_hand.append(self.zipDeck[0][1])
-
         self.addDealerImage()
         del self.zipDeck[0]
 
@@ -123,22 +124,16 @@ class Blackjack(object):
         self.win = None
         if self.dealer_total > 21:
             self.win = True
-            self.gameOn = False
         if self.player_total == 21:
             self.win = True
-            self.gameOn = False
         elif self.dealer_total == 21:
             self.win = False
-            self.gameOn = False
         elif self.player_total > self.dealer_total and (self.player_total < 21 and self.dealer_total < 21):
             self.win = True
-            self.gameOn = False
         elif self.player_total < self.dealer_total and self.dealer_total > 21:
             self.win = True
-            self.gameOn = False
         elif self.player_total == self.dealer_total:
             self.win = True
-            self.gameOn = False
         else:
             self.win = False
         self.endScreen()
@@ -194,10 +189,6 @@ class Blackjack(object):
             self.loser_image.place(x=0,y=0)
         self.resetButton = Button(self.top, text = 'Restart', command = self.startup)
         self.resetButton.grid(column = 0, row = 100)
-
-
-
-
 
 B = Blackjack()
 
