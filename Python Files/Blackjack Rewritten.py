@@ -2,10 +2,12 @@
 AUTHOR = Chris Fisher
 PROJECT NAME = Blackjack
 """
-from tkinter import *
+from Tkinter import *
 from random import *
-from tkinter import messagebox
 import os
+from pygame import mixer
+
+
 
 
 class Blackjack(object):
@@ -36,7 +38,8 @@ class Blackjack(object):
         self.player_total = 0
         self.dealer_total = 0
         #Dealing variables
-        os.chdir('/Users/Chris/Documents/OneDrive/Chris/A-Level/Computer Science/Programs/untitled3/Blackajck/Assets/cards/')
+        self.graphic_path = '/Users/Chris/Documents/OneDrive/Chris/A-Level/Computer Science/Programs/untitled3/Blackajck/Assets/cards/'
+        os.chdir(self.graphic_path)
         self.cards = 0
         self.dcards = 0
         self.label = [None] * 5
@@ -53,6 +56,10 @@ class Blackjack(object):
         self.hidden_card = None
         #Key bindings
         self.top.bind('<Return>', self.hit)
+        self.sound_path = '/Users/Chris/Documents/OneDrive/Chris/A-Level/Computer Science/Programs/untitled3/Blackajck/Assets/sounds/'
+        self.sound_file = str(randint(1,2))+'.mp3'
+
+        self.soundEngine()
 
     def startup(self):
         self.resetButton.grid_forget()
@@ -163,6 +170,7 @@ class Blackjack(object):
         self.label[self.cards] = Label(self.top, image = self.filename[self.cards])
         self.label[self.cards].place(x=x_coor, y=100)
         self.cards += 1
+        self.soundEngine()
 
     def addDealerImage(self):
         x_coor = self.dcards * 50
@@ -190,6 +198,11 @@ class Blackjack(object):
         self.resetButton = Button(self.top, text = 'Restart', command = self.startup)
         self.resetButton.grid(column = 0, row = 100)
 
+    def soundEngine(self):
+        os.chdir(self.sound_path)
+        mixer.init(0)
+        mixer.music.load(self.sound_file)
+        mixer.music.play()
+        os.chdir(self.graphic_path)
 B = Blackjack()
-
 B.top.mainloop()
